@@ -1,32 +1,28 @@
-import subprocess
-
+import pkg_resources
 import requests
 from behave import given, then
 
 
-@given("I have fastapi installed")
+@given("FastAPI is installed")
 def step_impl(context):
+    """Verify that FastAPI is installed"""
     try:
-        subprocess.check_call(["behave", "--version"])
-    except subprocess.CalledProcessError:
-        assert False, "Behave is not installed"
+        pkg_resources.get_distribution("fastapi")
+    except pkg_resources.DistributionNotFound:
+        context.fail("FastAPI is not installed")
 
 
-@given('I make a call to the fastapi app on "localhost:4848/"')
-def fastapi_call(context):
+@given('I make a call to the fastapi app on "{url}"')
+def fastapi_call(context, url):
     """Make a call to the fastapi app"""
-    context.response = requests.get("http://localhost:4848/")
+    context.response = requests.get(url, timeout=10)
 
 
-@then("we should get a response with status code 200")
-def response_code_200(context):
-    """Verify that the response code is 200 OK"""
+@then("we should get a response with status code {status_code}")
+def response_code(context, status_code):
+    """Verify that the response code is the expected one"""
+    expected_code = int(status_code)
+    actual_code = context.response.status_code
     assert (
-        context.response.status_code == 200
-    ), f"Expected status code 200, but got {context.response.status_code}"
-
-
-@given('I make a call to the fastapi app on "localhost:4848/docs"')
-def fastapi_docs_call(context):
-    """Make a call to the fastapi app docs"""
-    context.response = requests.get("http://localhost:4848/docs")
+        actual_code == expected_code
+    ), f"Expected status code {expected_code}, but got {actual_code}"
