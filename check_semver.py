@@ -6,9 +6,10 @@ import semver
 
 
 def main():
-    """Crea una nueva etiqueta semver basada en la última etiqueta existente en
-    el repositorio."""
-    # Obtén la etiqueta más reciente en el repositorio
+    # Fetch all tags from the remote repository
+    subprocess.run(["git", "fetch", "--tags"], check=True)
+
+    # Obtain the latest tag from the repository
     result = subprocess.run(
         ["git", "describe", "--abbrev=0", "--tags"],
         capture_output=True,
@@ -17,36 +18,20 @@ def main():
     )
     latest_tag = result.stdout.strip()
 
-    # Si no hay etiquetas, utiliza 0.0.0 como versión base
+    # If there are no tags, use 0.0.0 as the base version
     if not latest_tag:
         latest_tag = "0.0.0"
 
-    # Incrementa la versión utilizando semver (p.ej., 1.0.0 -> 1.0.1)
+    # Increment the version using semver
     incremented_version = semver.VersionInfo.parse(latest_tag).bump_patch()
 
-    # Verificar si la etiqueta ya existe
-    existing_tags = (
-        subprocess.run(
-            ["git", "tag", "--list"],
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        .stdout.strip()
-        .split("\n")
-    )
-
-    if str(incremented_version) in existing_tags:
-        print(f"La etiqueta {incremented_version} ya existe.")
-        return
-
-    # Crear una nueva etiqueta con la versión incrementada
+    # Create a new tag with the incremented version
     subprocess.run(
         ["git", "tag", str(incremented_version)],
         check=True,
     )
 
-    print(f"Etiqueta creada: {incremented_version}")
+    print(f"Tag created: {incremented_version}")
 
 
 if __name__ == "__main__":
