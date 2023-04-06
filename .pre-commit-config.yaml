@@ -42,20 +42,20 @@ repos:
   - id: install-dependencies
     name: Install dependencies
     entry: pip install -r requirements.txt
-    language: system
     pass_filenames: false
+    language: system
     always_run: true
 
   - id: run-behave-tests
     name: Run Behave tests
     entry: python run_behave_tests.py
-    language: system
     pass_filenames: false
+    language: system
 
   - id: check-semver
     name: auto increment SemVer tags
-    entry: python check_semver.py
     language: system
+    entry: python check_semver.py
     pass_filenames: true
     stages: [commit]
     verbose: false
