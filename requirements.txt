@@ -1,0 +1,9 @@
+behave
+fastapi
+httpx
+pydantic
+pytest
+pytest-cov
+semver
+setuptools
+uvicorn
