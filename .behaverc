@@ -1,0 +1,4 @@
+[behave]
+logging_clear_handlers=yes
+logging_level=INFO
+summary=true
