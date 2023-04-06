@@ -1,4 +1,5 @@
 behave
+fastapi
 httpx
 pytest
 pytest-cov
