@@ -1,9 +1,13 @@
+"""Crea una nueva etiqueta semver basada en la última etiqueta existente en el
+repositorio."""
 import subprocess
 
 import semver
 
 
 def main():
+    """Crea una nueva etiqueta semver basada en la última etiqueta existente en
+    el repositorio."""
     # Obtén la etiqueta más reciente en el repositorio
     result = subprocess.run(
         ["git", "describe", "--abbrev=0", "--tags"],
